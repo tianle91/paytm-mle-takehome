@@ -3,7 +3,7 @@ from typing import Dict
 import pyspark.sql.functions as F
 from pyspark.sql import DataFrame
 
-missing_values = {
+MISSING_VALUES = {
     'TEMP': 9999.9,
     'DEWP': 9999.9,
     'SLP': 9999.9,
@@ -18,8 +18,12 @@ missing_values = {
     'SNDP': 999.9
 }
 
+DATE_FORMATS = {
+    'YEARMODA': 'yyyyMMdd'
+}
 
-def nullify_missing_values(df: DataFrame, missing_values: Dict[str, object] = missing_values) -> DataFrame:
+
+def nullify_missing_values(df: DataFrame, missing_values: Dict[str, object] = MISSING_VALUES) -> DataFrame:
     for c, v in missing_values.items():
         # assume >= because it doesn't make sense for missing to be between allowable values
         # also, equality was giving maximums that are equal to missing value, probably related to precision.
@@ -27,12 +31,7 @@ def nullify_missing_values(df: DataFrame, missing_values: Dict[str, object] = mi
     return df
 
 
-date_formats = {
-    'YEARMODA': 'yyyyMMdd'
-}
-
-
-def parse_date(df: DataFrame, date_formats: Dict[str, str] = date_formats) -> DataFrame:
+def parse_date(df: DataFrame, date_formats: Dict[str, str] = DATE_FORMATS) -> DataFrame:
     for c, fmt in date_formats.items():
         df = df.withColumn(c, F.to_timestamp(F.col(c), fmt))
     return df

@@ -6,10 +6,10 @@ from pyspark.sql.dataframe import DataFrame
 from pyspark.sql.types import (FloatType, IntegerType, StringType, StructField,
                                StructType)
 
-read_csv_options = {'header': True}
+READ_CSV_OPTIONS = {'header': True}
 
 
-schema = StructType([
+DATA_SCHEMA = StructType([
     # index columns
     StructField('STN---', IntegerType(), False),
     StructField('WBAN', IntegerType(), False),
@@ -29,20 +29,20 @@ def load(spark: SparkSession, input_prefix: str) -> Tuple[DataFrame, DataFrame, 
     countrylist = (
         spark
         .read
-        .options(**read_csv_options)
+        .options(**READ_CSV_OPTIONS)
         .csv(os.path.join(input_prefix, 'countrylist.csv'))
     )
     stationlist = (
         spark
         .read
-        .options(**read_csv_options)
+        .options(**READ_CSV_OPTIONS)
         .csv(os.path.join(input_prefix, 'stationlist.csv'))
     )
     data = (
         spark
         .read
-        .options(**read_csv_options)
-        .schema(schema)
+        .options(**READ_CSV_OPTIONS)
+        .schema(DATA_SCHEMA)
         .csv(os.path.join(input_prefix, 'data', '2019'))
     )
     return countrylist, stationlist, data
