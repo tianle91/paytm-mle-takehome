@@ -1,2 +1,3 @@
-# pyspark-template
-Template intended for development in a Visual Studio Code Remote - Containers environment.
+# PayTM MLE Takehome
+
+See [test.ipynb](test.ipynb)
